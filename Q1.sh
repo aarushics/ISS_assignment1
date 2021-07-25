@@ -1,5 +1,7 @@
-clear
-read -p " Input :"  inpString
-echo "$inpString" | sed "s/./#/5g" >> q1_output.txt
-echo 
+
+
+while IFS= read -r line; do
+	input=$line
+	echo "$input" | sed "s/./#/5g" >> q1_output.txt
+done < $1
 
