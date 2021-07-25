@@ -11,16 +11,16 @@ while IFS= read -r line; do
 	age=$((current_year - year_input))
 
 	if [[ $month_input > $current_month ]]; then
-		age=$((current_year - year_input - 1))
+		age=$((age - 1))
 	else
 		if [[ $month_input == $current_month ]]; then
 			if [[ $date > $current_date ]]; then
-				age=$((current_year - year_input - 1))
+				age=$((age - 1))
 			fi
 		fi
 	fi
 	
 	echo $name $age >> q2_output.txt
-	cuur_file=$1
+
 done < $1
 

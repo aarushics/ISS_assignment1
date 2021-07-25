@@ -6,46 +6,47 @@ while getopts 'C:f:k:l:n:o:c:v:ad' tags; do
     n) contact=$OPTARG ;;
     o) company=$OPTARG ;;
     k) key=$OPTARG ;;
-    c) head=$OPTARG ;;
+    c) header=$OPTARG ;;
     v) value=$OPTARG ;;
-    a) ord="ascending" ;;
-    d) ord="descending" ;;
+    a) ord="asc" ;;
+    d) ord="desc" ;;
     esac
 done
 
-MYTAB=''
+
 if [[ $command == "insert" ]]; then
-    echo $fn${MYTAB}","${MYTAB}$ln${MYTAB}","${MYTAB}$contact${MYTAB}","${MYTAB}$company >>contacts.csv
+    #echo $fn","$ln","$contact","$company >>contacts.csv
+    echo $fn","$ln","$contact","$company >>contacts.csv
 
 elif [[ $command == "edit" ]]; then
 
-    touch temp.csv
+    touch tmp.csv
     while read -r line; do
 
-        tempname=$(echo $line | awk -F, '{print $1}')
-        if [[ $key == $tempname ]]; then
-            echo $fn${MYTAB}","${MYTAB}$ln${MYTAB}","${MYTAB}$contact${MYTAB}","${MYTAB}$company >>temp.csv
+        tmpname=$(echo $line | awk -F, '{print $1}')
+        if [[ $key == $tmpname ]]; then
+            echo $fn","$ln","$contact","$company >>tmp.csv
 
         else
-            echo $line >>temp.csv
+            echo $line >>tmp.csv
         fi
     done <contacts.csv
 
-    cat temp.csv >contacts.csv
-    rm temp.csv
+    cat tmp.csv >contacts.csv
+    rm tmp.csv
 elif [[ $command == "display" ]]; then
-    echo "fname,lname,mobile,Office"
-    if [[ $ord == "ascending" ]]; then
+    echo "fname,lname,contact,Office"
+    if [[ $ord == "asc" ]]; then
         sort -k1df contacts.csv
     else
         sort -k1rdf contacts.csv
     fi
 elif [[ $command == "search" ]]; then
-    if [[ $head == "fname" ]]; then
+    if [[ $header == "fname" ]]; then
         column=0
-    elif [[ $head == "lname" ]]; then
+    elif [[ $header == "lname" ]]; then
         column=1
-    elif [[ $head == "mobile" ]]; then
+    elif [[ $header == "contact" ]]; then
         column=2
     fi
 
@@ -56,24 +57,24 @@ elif [[ $command == "search" ]]; then
         fi
     done <contacts.csv
 elif [[ $command == "delete" ]]; then
-    if [[ $head == "fname" ]]; then
+    if [[ $header == "fname" ]]; then
         column=1
-    elif [[ $head == "lname" ]]; then
+    elif [[ $header == "lname" ]]; then
         column=2
-    elif [[ $head == "mobile" ]]; then
+    elif [[ $header == "contact" ]]; then
         column=3
     fi
 
-    touch temp.csv
+    touch tmp.csv
     while read -r line; do
         comp=$(echo $line | awk -v num=$column -F, '{printf "%s\n", $num}')
         # echo $comp $value
         if [[ $value != $comp ]]; then
-            echo $line >>temp.csv
+            echo $line >>tmp.csv
         fi
     done <contacts.csv
-    cat temp.csv >contacts.csv
-    rm temp.csv
+    cat tmp.csv >contacts.csv
+    rm tmp.csv
 fi
 
 

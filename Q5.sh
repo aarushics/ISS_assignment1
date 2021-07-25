@@ -1,35 +1,39 @@
 #!/bin/bash
 clear
-prev=$pwd
 
-if test "$1" != ""; then
+
+if test "$1" == ""; then
+	path=$pwd
+   else
     path="$1"
     cd $path
-else
-    path=$pwd
 fi
 
-MYTAB=''
-touch dir.txt file.txt dir_ans.txt file_ans.txt
+
+touch dir_list.txt file_list.txt dir_sort.txt file_sort.txt
 
 for FILE in *; do
     if [[ -d $FILE ]]; then
         directory_val=$(find $FILE -type f | wc -l)
         directory_name=$FILE
-        echo $directory_name${MYTAB}"," $directory_val "file(s)" >>dir.txt
+        #echo $directory_name"," $directory_val "file(s)" >> dir_list.txt 
+        for a  in $(find $directory_name -type d); do
+        echo $a "," $(find $a -type f | wc -l)" file(s)" >> dir_list.txt
+        done
+              
     elif [[ -f $FILE ]]; then
-        filesize=$(find "$FILE" -printf "%s")
-        filename=$FILE
-        echo $filesize $filename >>file.txt
+        size=$(find "$FILE" -printf "%s")
+        name=$FILE
+        echo $size $name >> file_list.txt
     fi
 done
 
-sort -rk 2 dir.txt >>dir_ans.txt
-sort -rn file.txt | awk '{print $2}' >>file_ans.txt
+sort -rk 2 dir_list.txt >>dir_sort.txt
+sort -rn file_list.txt | awk '{print $2}' >>file_sort.txt
 echo "Directories:"
-cat dir_ans.txt
+cat dir_sort.txt
 echo
 echo "Files:"
-cat file_ans.txt
-rm dir_ans.txt file_ans.txt dir.txt file.txt
-cd $prev
+cat file_sort.txt
+rm dir_sort.txt file_sort.txt dir_list.txt file_list.txt
+

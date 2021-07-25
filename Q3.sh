@@ -1,18 +1,18 @@
 if [[ "$1" != "" ]]
   then
-    para="$1"    
+    input="$1"    
 else
-    para='paragraph.txt' #paraagraph.txt is a textfile on local machine
+    input='paragraph.txt' #paraagraph.txt is a textfile on local machine
 fi
 
 echo "1. Words - start with ‘s’ and is not follow by ‘a’"
-grep -wo 's[[:alnum:]]*' $para | grep -wv 'sa.*'
+grep -w -o 's[[:alnum:]]*' $input | grep -wv 'sa.*'
 
 echo "2. Word starts with ‘w’ and is followed by ‘h’"
-grep -wo 'wh[[:alnum:]]*' $para
+grep -w -o 'wh[[:alnum:]]*' $input
 
 echo "3. Word starts with ‘t’ and is followed by ‘h’"
-grep -wo 'th[[:alnum:]]*' $para
+grep -w -o 'th[[:alnum:]]*' $input
 
 echo "4. Word starts with ‘a’ and is not followed by ‘n’"
-grep -wo 'a[[:alnum:]]*' $para | grep -wv 'an.*'
+grep -w -o 'a[[:alnum:]]*' $input | grep -wv 'an.*'
